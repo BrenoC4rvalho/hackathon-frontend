@@ -1,73 +1,59 @@
-# React + TypeScript + Vite
+# Campus Notify — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface web do Campus Notify: gestão de alunos, grupos, tarefas acadêmicas e notificações via WhatsApp.
 
-Currently, two official plugins are available:
+## Requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js 20+
+- Backend rodando em `http://localhost:8080` (ou URL configurada)
 
-## React Compiler
+## Configuração
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Copie o arquivo de ambiente e ajuste se necessário:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.example .env.local
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+| Variável        | Descrição                          | Padrão                  |
+|-----------------|------------------------------------|-------------------------|
+| `VITE_API_URL`  | URL base da API (Spring Boot)      | `http://localhost:8080` |
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev      # desenvolvimento (Vite)
+npm run build    # build de produção
+npm run preview  # preview do build
+npm run lint     # ESLint
 ```
+
+## Estrutura
+
+```
+src/
+  components/   # Layout, AuthPanel, UI reutilizável
+  contexts/     # Auth, confirmações globais
+  pages/        # Telas da aplicação
+  routes/       # Rotas públicas/privadas
+  services/     # Chamadas à API (axios)
+```
+
+## Autenticação
+
+A API usa cookies de sessão (`withCredentials: true`). Se a sessão expirar (401), o usuário é redirecionado para o login automaticamente.
+
+## Rotas principais
+
+| Rota            | Descrição        |
+|-----------------|------------------|
+| `/`             | Login            |
+| `/register`     | Cadastro         |
+| `/home`         | Dashboard        |
+| `/alunos`       | Alunos           |
+| `/grupos`       | Grupos           |
+| `/vinculos`     | Vínculos         |
+| `/tarefas`      | Tarefas          |
+| `/notificacoes` | Notificações     |
+| `/whatsapp`     | Teste WhatsApp   |
