@@ -7,9 +7,11 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { paths } from '@/routes/paths';
 import { getApiErrorMessage } from '@/lib/apiError';
+import { useAuthContext } from '@/contexts/AuthContext';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { refresh } = useAuthContext();
   const [searchParams] = useSearchParams();
   const sessionExpired = searchParams.get('session') === 'expired';
   const [form, setForm] = useState({ email: '', password: '' });
@@ -22,6 +24,7 @@ export default function Login() {
     setLoading(true);
     try {
       await AuthService.login(form);
+      await refresh();
       navigate(paths.home);
     } catch (err) {
       setError(getApiErrorMessage(err, 'E-mail ou senha inválidos.'));
