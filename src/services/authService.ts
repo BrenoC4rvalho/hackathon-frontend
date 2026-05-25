@@ -13,6 +13,7 @@ export type RegisterRequest = {
 
 export type AuthResponse = {
   message: string;
+  token?: string;
 };
 
 export type UserResponse = {
@@ -24,6 +25,9 @@ export type UserResponse = {
 export const AuthService = {
   login: async (data: LoginRequest): Promise<AuthResponse> => {
     const response = await api.post<AuthResponse>('/api/auth/login', data);
+    if (response.data.token) {
+      localStorage.setItem('access_token', response.data.token);
+    }
     return response.data;
   },
 
@@ -39,6 +43,7 @@ export const AuthService = {
 
   logout: async (): Promise<AuthResponse> => {
     const response = await api.post<AuthResponse>('/api/auth/logout');
+    localStorage.removeItem('access_token');
     return response.data;
   },
 };

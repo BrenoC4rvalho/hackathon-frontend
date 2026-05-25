@@ -3,7 +3,16 @@ import { paths } from '@/routes/paths';
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8080',
-  withCredentials: true,
+  withCredentials: false,
+});
+
+// Injeta o token em toda requisição
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 const AUTH_SKIP_REDIRECT = ['/api/auth/login', '/api/auth/register', '/api/auth/me'];
@@ -18,6 +27,7 @@ api.interceptors.response.use(
       window.location.pathname === paths.register;
 
     if (error.response?.status === 401 && !isAuthRoute && !isPublicPage) {
+      localStorage.removeItem('access_token');
       const redirect = `${paths.login}?session=expired`;
       if (window.location.pathname + window.location.search !== redirect) {
         window.location.href = redirect;
